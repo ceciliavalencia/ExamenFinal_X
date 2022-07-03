@@ -1,3 +1,5 @@
+using Autofac;
+using CiudadDollarApi.Controllers;
 using Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +17,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiClient
+
+namespace CiudadDollarApi
 {
     public class Startup
     {
@@ -29,20 +32,28 @@ namespace ApiClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             SqlConnection conn = new SqlConnection
             {
                 ConnectionString = "Server=DESKTOP-TM0P2M4\\SQLEXPRESS;Database=CiudadDollar;trusted_Connection=True;"
             };
+            
             conn.Open();
-            services.AddSingleton<IImpuestos, ClientService>();
 
+            services.AddSingleton<IImpuestos, ClientOperationService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiClient", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CiudadDollarApi", Version = "v1" });
             });
         }
 
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new DIModule());
+            builder.RegisterModule(new DIModule());
+     
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -50,11 +61,11 @@ namespace ApiClient
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiClient v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CiudadDollarApi v1"));
             }
 
             app.UseHttpsRedirection();
-
+            app.UseSentryTracing();
             app.UseRouting();
 
             app.UseAuthorization();

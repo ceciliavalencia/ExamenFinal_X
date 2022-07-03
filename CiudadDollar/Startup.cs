@@ -15,7 +15,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiClient
+namespace CiudadDollar
 {
     public class Startup
     {
@@ -39,7 +39,7 @@ namespace ApiClient
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiClient", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CiudadDollar", Version = "v1" });
             });
         }
 
@@ -50,7 +50,7 @@ namespace ApiClient
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiClient v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CiudadDollar v1"));
             }
 
             app.UseHttpsRedirection();
